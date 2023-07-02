@@ -21,10 +21,11 @@ namespace grpcWithAuth
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGrpcReflection();
             services.AddGrpc();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftWebApi(Configuration);
+                .AddMicrosoftIdentityWebApi(Configuration);
             
             services.AddAuthorization();
         }
@@ -44,6 +45,7 @@ namespace grpcWithAuth
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcReflectionService();
 
                 endpoints.MapGet("/", async context =>
                 {

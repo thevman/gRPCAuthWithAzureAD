@@ -21,17 +21,16 @@ namespace grpcClient
             var handler = new HttpClientHandler();
 handler.ServerCertificateCustomValidationCallback = 
     HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            //var authProvider = new DeviceCodeAuthProvider(configuration);
-            //var token = await authProvider.GetAccessToken(new string[] {configuration["scope"]});
-            var tokenAcquirerFactory = TokenAcquirerFactory.GetDefaultInstance();
-            var acquirer = tokenAcquirerFactory.GetTokenAcquirer();
-            AcquireTokenResult tokenResult = await acquirer.GetTokenForUserAsync(new[] { "https://graph.microsoft.com/.default" });
-            var token = tokenResult.AccessToken;
+            /* Working Code */
+            var authProvider = new DeviceCodeAuthProvider(configuration);
+            var token = await authProvider.GetAccessToken(new string[] {configuration["scope"]});
+            /* End Working Code */
 
             //var channel = GrpcChannel.ForAddress("https://localhost:8000");
             var channel = GrpcChannel.ForAddress("https://grpc-service.redpond-0b7c5ea7.canadacentral.azurecontainerapps.io",
             new GrpcChannelOptions { HttpHandler = handler });
             var client = new Greeter.GreeterClient(channel);
+            Console.WriteLine(token);
             
             var headers = new Metadata();
             headers.Add("Authorization", $"Bearer {token}");

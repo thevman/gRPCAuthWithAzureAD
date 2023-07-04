@@ -30,7 +30,7 @@ az containerapp create \
   --resource-group $RESOURCE_GROUP \
   --environment $ENVIRONMENT \
   --image $ACR_NAME.azurecr.io/$API_NAME \
-  --target-port 8000 \
+  --target-port 80 \
   --ingress 'external' \
   --registry-server $ACR_NAME.azurecr.io \
   --transport http2 \
@@ -41,10 +41,10 @@ az containerapp create \
   --query properties.configuration.ingress.fqdn
 
 
+az containerapp update \
+  --name grpc-service \
+  --resource-group aca-grpc-service1-rg \
+  --image acagrpc1thevman.azurecr.io/grpc-service:cx4
 
-#  az containerapp auth microsoft update --debug --verbose \
-# --name album-api \
-# --resource-group album-containerapps \
-# --client-id 738d3dbd-5c4b-4d6d-8e5f-7765280795e0 \
-# --client-secret TgE8Q~dssICYDE0rvJ1EFMi33zlSQLFwfEpzcaz0 \
-# --tenant-id ff87514a-dc3e-4e9a-a805-fa5dd9b76e28
+
+az acr build --registry acagrpc1thevman --image grpc-service:{{.RunId }} ./grpcService
